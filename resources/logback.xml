@@ -1,0 +1,65 @@
+<!-- Logback configuration. See http://logback.qos.ch/manual/index.html -->
+<configuration scan="true" scanPeriod="10 seconds">
+
+  <!-- Simple file output -->
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!-- encoder defaults to ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} %-5level %X{pipejine.q} %logger{36} - %msg%n</pattern>
+    </encoder>
+
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- rollover daily -->
+      <fileNamePattern>logs/kixi.clifton-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy
+          class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <!-- or whenever the file size reaches 64 MB -->
+        <maxFileSize>64 MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+    </rollingPolicy>
+
+    <!-- Safely log to the same file from multiple JVMs. Degrades performance! -->
+    <prudent>true</prudent>
+  </appender>
+
+  <!-- Console output -->
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <!-- encoder defaults to ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
+    <encoder>
+      <pattern>%-5level %logger{10} %X{pipejine.q} - %msg%n</pattern>
+    </encoder>
+    <!-- Only log level DEBUG and above -->
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>DEBUG</level>
+    </filter>
+  </appender>
+
+  <appender name="EMAIL" class="ch.qos.logback.classic.net.SMTPAppender">
+    <smtpHost>email-smtp.us-east-1.amazonaws.com</smtpHost>
+    <smtpPort>587</smtpPort>
+    <STARTTLS>true</STARTTLS>
+    <username>AKIAI6EDLT4MXFRII22Q</username>
+    <password>AmdCX6Mqpv4OU/K5e851e2IGBuRgJ/qeoTN/v3Mp1NMY</password>
+    <to>support+hecuba@mastodonc.com</to>
+    <from>support+hecuba@mastodonc.com</from>
+    <subject>ERROR: %logger{20} %X{pipejine.q} - %m</subject>
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <pattern>%date %-5level %logger{35} %X{pipejine.q} - %message%n</pattern>
+    </layout>
+  </appender>
+
+  <!-- Enable FILE and STDOUT appenders for all log messages.
+       By default, only log at level INFO and above. -->
+  <root level="DEBUG">
+    <appender-ref ref="FILE" />
+    <appender-ref ref="STDOUT" />
+    <!-- <appender-ref ref="EMAIL" /> -->
+  </root>
+
+  <logger name="com.amazonaws" level="INFO" />
+  <logger name="org.eclipse.jetty" level="INFO" />
+  <logger name="org.eclipse.jetty" level="INFO" />
+  <logger name="org.apache.zookeeper" level="INFO"/>
+  <logger name="user" level="ALL" />
+
+</configuration>

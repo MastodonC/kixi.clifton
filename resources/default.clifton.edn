@@ -1,0 +1,9 @@
+{:zookeeper {:url "127.0.0.1:2181"}
+ :kafka {:config {:group.id "clj-kafka.consumer"
+                  :auto.offset.reset "smallest"
+                  :auto.commit.enable "true"
+                  }}
+ :cassandra {:hosts ["127.0.0.1"]
+             :keyspace "kixi"
+             :port 9042
+             :credentials {:username "vmfest" :password "vmfest"}}}
